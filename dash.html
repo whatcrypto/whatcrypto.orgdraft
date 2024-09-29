@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto Dashboard</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f7;
+    }
+
+    /* Container for the whole dashboard */
+    .dashboard-container {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Individual column styling */
+    .dashboard-column {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 30%;
+      padding: 20px;
+      margin-right: 20px;
+    }
+
+    /* Title header for each column */
+    .dashboard-column h3 {
+      margin-top: 0;
+      padding: 10px;
+      background-color: #ff5823;
+      color: white;
+      border-radius: 10px 10px 0 0;
+      font-weight: 600;
+    }
+
+    /* Main content inside each column */
+    .column-content {
+      padding: 10px;
+    }
+
+    .column-content h4 {
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .column-content ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .column-content ul li {
+      margin-bottom: 10px;
+    }
+
+    .column-content a {
+      color: #ff5823;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .column-content a:hover {
+      text-decoration: underline;
+    }
+
+    /* Market and Dashboard list styling */
+    .column-content li span {
+      display: block;
+      margin-left: 10px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    /* Styling for more link */
+    .more-link {
+      display: block;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #ff5823;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .dashboard-container {
+        flex-direction: column;
+      }
+
+      .dashboard-column {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard-container">
+    
+    <!-- Dashboard Column -->
+    <div class="dashboard-column">
+      <h3>Dashboard</h3>
+      <div class="column-content">
+        <h4>Activity Log</h4>
+        <ul>
+          <li>Latest Transactions</li>
+          <li><span>Transaction Type</span></li>
+          <li><span>Amount</span></li>
+          <li><span>Date & Time</span></li>
+          <li><span>Status</span></li>
+        </ul>
+        <a href="#" class="more-link">More</a>
+
+        <h4>Portfolio Resume</h4>
+        <ul>
+          <li>Total Amount</li>
+          <li>Daily P&L</li>
+        </ul>
+        <a href="#" class="more-link">More</a>
+      </div>
+    </div>
+
+    <!-- Market Column -->
+    <div class="dashboard-column">
+      <h3>Market</h3>
+      <div class="column-content">
+        <h4>Current Price List</h4>
+        <ul>
+          <li>Top Coins List</li>
+          <li><span>Coin Name/Pair</span></li>
+          <li><span>Price ~ FIAT</span></li>
+          <li><span>24h Stat (%)</span></li>
+        </ul>
+        
+        <h4>Coin Leaderboard</h4>
+        <ul>
+          <li>Filter</li>
+          <li><span>Price (U/D)</span></li>
+          <li><span>24h Vol (U/D)</span></li>
+          <li>Table</li>
+          <li><span>Coin Name/Pair</span></li>
+          <li><span>Last Price</span></li>
+          <li><span>24h %</span></li>
+        </ul>
+
+        <h4>Earn</h4>
+        <ul>
+          <li>Featured Products</li>
+          <li><span>Coin Staking Name</span></li>
+          <li><span>Annual Percentage Rate (APR) Maximum</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- News Column -->
+    <div class="dashboard-column">
+      <h3>News</h3>
+      <div class="column-content">
+        <p>This section can include links or headlines for the latest cryptocurrency news and updates. You can populate this dynamically with news feeds.</p>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
