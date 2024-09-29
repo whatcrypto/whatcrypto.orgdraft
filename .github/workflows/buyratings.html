@@ -1,0 +1,221 @@
+<!-- Include ApexCharts for creating the radial gauge -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<!-- Link Poppins Font for a clean modern font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<!-- Apple-style widget container -->
+<div id="chaikinGauge" style="max-width: 500px; margin: 40px auto; background: linear-gradient(135deg, #f0f0f3, #eaeaec); padding: 30px; border-radius: 20px; box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1); color: #333; font-family: 'Poppins', sans-serif;">
+
+  <!-- Header section for coin name and price -->
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div>
+      <h2 id="cryptoName" style="color: #1c1c1e; font-weight: 600; margin: 0; font-size: 1.8rem;">Kusama (KSM)</h2>
+      <h4 id="cryptoPrice" style="color: #8e8e93; font-weight: 300; margin: 5px 0 0;">Price: $0.00</h4>
+    </div>
+    <!-- Display the current overall rating -->
+    <div id="gaugeRating" style="font-size: 1.5rem; font-weight: 700; color: #1c1c1e;">Hold</div>
+  </div>
+
+  <!-- Radial Gauge -->
+  <div id="gaugeChart" style="margin-top: 20px;"></div>
+
+  <!-- Metrics section for Tokenomics, Ecosystem Growth, etc. -->
+  <div style="margin-top: 20px;">
+
+    <!-- Individual Metric Bars styled as Apple flat progress bars -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Tokenomics</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="tokenomicsScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Ecosystem Growth</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="ecosystemScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Yield/Interest</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="yieldInterestScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Team Reputation</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="teamReputationScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Technical</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="technicalScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <div style="color: #1c1c1e; font-weight: 500;">Regulatory Compliance</div>
+      <div class="progress-bar" style="height: 10px; width: 230px; border-radius: 20px; background-color: #e5e5ea; margin-left: 15px;">
+        <div id="regulatoryScoreBar" style="height: 100%; width: 0%; border-radius: 20px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fetch crypto data from CoinGecko for Kusama and calculate metrics and the final score
+  async function fetchCryptoData(coinId) {
+    const response = await fetch(`https://api.coingecko.com/api/v3/coins/${coinId}`);
+    const data = await response.json();
+
+    // --- Metric Calculations ---
+    const circulatingSupply = data.market_data.circulating_supply;
+    const totalSupply = data.market_data.total_supply || 1;
+    const supplyRatio = (circulatingSupply / totalSupply) * 100;
+    const tokenomicsScore = supplyRatio < 50 ? 90 : supplyRatio < 80 ? 70 : 50;
+
+    const currentVolume = data.market_data.total_volume.usd || 1;
+    const marketCap = data.market_data.market_cap.usd || 1;
+    const volumeGrowth = (currentVolume / marketCap) * 100;
+    const ecosystemScore = volumeGrowth > 50 ? 90 : volumeGrowth > 10 ? 70 : 50;
+
+    // Instead of random values, use fixed values for these scores
+    const yieldInterestScore = 75;  // Example fixed value
+    const teamReputationScore = 80; // Example fixed value
+
+    const currentPrice = data.market_data.current_price.usd;
+    const ma50 = currentPrice * 0.9;
+    const ma200 = currentPrice * 0.85;
+    const technicalScore = currentPrice > ma50 && currentPrice > ma200 ? 90 : currentPrice > ma50 || currentPrice > ma200 ? 70 : 50;
+
+    const regulatoryScore = 85;  // Example fixed value for regulatory compliance
+
+    // Update price and name
+    document.getElementById('cryptoPrice').innerText = `Price: $${currentPrice.toFixed(2)}`;
+
+    // Update the bars
+    updateProgressBar('tokenomicsScoreBar', tokenomicsScore);
+    updateProgressBar('ecosystemScoreBar', ecosystemScore);
+    updateProgressBar('yieldInterestScoreBar', yieldInterestScore);
+    updateProgressBar('teamReputationScoreBar', teamReputationScore);
+    updateProgressBar('technicalScoreBar', technicalScore);
+    updateProgressBar('regulatoryScoreBar', regulatoryScore);
+
+    // --- Final Weighted Score ---
+    const finalScore = (
+      (tokenomicsScore * 0.15) +
+      (ecosystemScore * 0.20) +
+      (yieldInterestScore * 0.15) +
+      (teamReputationScore * 0.15) +
+      (technicalScore * 0.15) +
+      (regulatoryScore * 0.20)
+    );
+
+    return Math.min(finalScore, 100); // Ensure score is between 0 and 100
+  }
+
+  // Function to update progress bars and their color based on the score
+  function updateProgressBar(elementId, score) {
+    const bar = document.getElementById(elementId);
+    bar.style.width = `${score}%`;
+
+    if (score >= 70) {
+      bar.style.backgroundColor = '#34c759';  // Green for scores 70-100
+    } else if (score >= 40) {
+      bar.style.backgroundColor = '#ffcc00'; // Yellow for scores 40-69
+    } else {
+      bar.style.backgroundColor = '#ff3b30';    // Red for scores 0-39
+    }
+  }
+
+  function getRatingText(score) {
+    if (score >= 70) {
+      return '<span style="color: #34c759;">Buy</span>';
+    } else if (score >= 40) {
+      return '<span style="color: #ffcc00;">Hold</span>';
+    } else {
+      return '<span style="color: #ff3b30;">Sell</span>';
+    }
+  }
+
+  async function createGauge() {
+    const score = await fetchCryptoData('kusama');
+    const ratingText = getRatingText(score);
+
+    document.getElementById('gaugeRating').innerHTML = ratingText; // Update the Buy/Hold/Sell label
+
+    const options = {
+      chart: {
+        type: 'radialBar',
+        height: 250
+      },
+      series: [score],
+      plotOptions: {
+        radialBar: {
+          hollow: {
+            size: '70%'
+          },
+          track: {
+            background: '#d1d1d6'
+          },
+          dataLabels: {
+            name: {
+              fontSize: '18px',
+              color: '#1c1c1e',
+              offsetY: 0
+            },
+            value: {
+              fontSize: '22px',
+              color: '#1c1c1e',
+              offsetY: 10,
+              formatter: function (val) {
+                return Math.round(val) + '%';
+              }
+            }
+          }
+        }
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shade: 'dark',
+          type: 'vertical',
+          gradientToColors: ['#34c759'],
+          stops: [0, 50, 100],
+          colorStops: [
+            {
+              offset: 0,
+              color: '#ff3b30',
+              opacity: 1
+            },
+            {
+              offset: 50,
+              color: '#ffcc00',
+              opacity: 1
+            },
+            {
+              offset: 100,
+              color: '#34c759',
+              opacity: 1
+            }
+          ]
+        }
+      },
+      stroke: {
+        lineCap: 'round'
+      },
+      labels: ['Overall Score']
+    };
+
+    const chart = new ApexCharts(document.querySelector("#gaugeChart"), options);
+    chart.render();
+  }
+
+  createGauge();
+</script>
